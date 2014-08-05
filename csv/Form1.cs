@@ -13,15 +13,17 @@ namespace csv
 {
     public partial class Form1 : Form
     {
-        private const string Path = @"C:/mpx/mojcsv.csv";
+        //private const string Path = @"C:/mpx/mojcsv.csv";
         public Form1()
         {
             InitializeComponent();
         }
-
+        //ogranicz kol do 156
         private void button1_Click(object sender, EventArgs e)
         {
-            var wiersze = File.ReadAllLines(Path);
+            openFileDialog1.ShowDialog();
+            var plik = openFileDialog1.FileName;
+            var wiersze = File.ReadAllLines(plik);
             var wierszeBezKolumn = wiersze.Skip(1);
             var znak = ';';
             var nazwyKolumn = wiersze.First().Split(znak);
