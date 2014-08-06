@@ -97,27 +97,52 @@ namespace csv
             var allData = File.ReadAllText(plik);
 
             //App.config
-            var setting = ConfigurationManager.ConnectionStrings["ConnStringODB1"];
-            using (var polacznie = new SqlConnection(setting.ConnectionString))
-            //using (var polacznie = new SqlConnection("Server=(local)/sqlexpress;Database=OptimaDb;Trusted_Connection=True"))
+            //var ustawienia = ConfigurationManager.ConnectionStrings["ConnStringODB1"];
+            //using (var polacznie = new SqlConnection(ustawienia.ConnectionString))
+            //SqlConnection con = new SqlConnection(@"Server=(local)\\sqlexpress;Database=OptimaDb;Trusted_Connection=True");
+
+            //string connStr = @"Server=(local)\\sqlexpress;Database=OptimaDb;Trusted_Connection=True";
+            string connStr = @"Data Source=(local)\sqlexpress;Initial Catalog=OptimaDb;Integrated Security=True;";
+            string stworzTabele = @"CREATE TABLE PlikCSV (zawartosc varchar(255))";
+            string plikDoTabeli = @"INSERT INTO PlikCSV VALUES (@zawartosc)";
+
+
+            using (var polaczenie = new SqlConnection(connStr))
             {
-                polacznie.Open();
-                try
+                using (var command = new SqlCommand())
                 {
-                    using (var polecenie = new SqlCommand("create table plikCSV (zawartosc TEXT)"))
+                    command.Connection = polaczenie;
+                    command.CommandText = stworzTabele;
+                    command.CommandType = CommandType.Text;
+                    command.Parameters.AddWithValue(@"zawartosc", allData);
+
+                    try
                     {
-                        polecenie.ExecuteNonQuery();
+                        polaczenie.Open();
+                        command.ExecuteNonQuery();
                     }
-                    using (var polecenie = new SqlCommand("insert into plikcsv values (@zawartosc)"))
+                    catch (SqlException exception)
                     {
-                        polecenie.Parameters.Add(new SqlParameter("zawartosc", allData));
-                        polecenie.ExecuteNonQuery();
+                        MessageBox.Show(exception.Message.ToString());
+                        
                     }
-                    
                 }
-                catch (Exception)
+
+                using (var command = new SqlCommand())
                 {
-                    MessageBox.Show("error");
+                    command.Connection = polaczenie;
+                    command.CommandText = plikDoTabeli;
+                    command.CommandType = CommandType.Text;
+
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    catch (SqlException exception)
+                    {
+                        MessageBox.Show(exception.Message.ToString());
+                        
+                    }
                 }
             }
         }
