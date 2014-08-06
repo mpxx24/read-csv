@@ -65,7 +65,7 @@ namespace csv
                 tabela.Columns.Add(s);
             }
 
-            linieTekstu.RemoveAt(1);
+            linieTekstu.RemoveAt(0);
             foreach (var s in linieTekstu)
             {
                 tabela.Rows.Add(s.Split(znak));
@@ -95,13 +95,11 @@ namespace csv
             var plik = openFileDialog1.FileName;
 
             var allData = File.ReadAllText(plik);
+
+            //App.config
             var setting = ConfigurationManager.ConnectionStrings["ConnStringODB1"];
-            
             using (var polacznie = new SqlConnection(setting.ConnectionString))
-                                                    /*"Persist Security Info = true;" +
-                                                     "Integrated Security = true;" +
-                                                     "Initial Catalog = OptimaDb" +
-                                                     "server = (local)"))*/
+            //using (var polacznie = new SqlConnection("Server=(local)/sqlexpress;Database=OptimaDb;Trusted_Connection=True"))
             {
                 polacznie.Open();
                 try
@@ -117,7 +115,7 @@ namespace csv
                     }
                     
                 }
-                catch (Exception exception)
+                catch (Exception)
                 {
                     MessageBox.Show("error");
                 }
