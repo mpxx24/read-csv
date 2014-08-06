@@ -89,6 +89,7 @@ namespace csv
             dataGridView1.DataSource = null;
         }
 
+        //zapisz plik CSV do bazy danych
         private void button5_Click(object sender, EventArgs e)
         {
             openFileDialog1.ShowDialog();
@@ -102,9 +103,12 @@ namespace csv
             //SqlConnection con = new SqlConnection(@"Server=(local)\\sqlexpress;Database=OptimaDb;Trusted_Connection=True");
 
             //string connStr = @"Server=(local)\\sqlexpress;Database=OptimaDb;Trusted_Connection=True";
-            string connStr = @"Data Source=(local)\sqlexpress;Initial Catalog=OptimaDb;Integrated Security=True;";
-            string stworzTabele = @"CREATE TABLE PlikCSV (zawartosc varchar(255))";
-            string plikDoTabeli = @"INSERT INTO PlikCSV VALUES (@zawartosc)";
+            var connStr = @"Data Source=(local)\sqlexpress;Initial Catalog=OptimaDb;Integrated Security=True;";
+            var stworzTabele = @"CREATE TABLE PlikCSV (zawartosc varchar(255))";
+            //string stworzTabele = @"IF NOT EXIST (SELECT * FROM sys.tables WHERE name = 'PlikCSV')" +
+            //                      "CREATE TABLE PlikCSV (zawartosc varchar(255))";
+                                  
+            var plikDoTabeli = @"INSERT INTO PlikCSV VALUES (@zawartosc)";
 
 
             using (var polaczenie = new SqlConnection(connStr))
@@ -146,6 +150,51 @@ namespace csv
                     }
                 }
             }
+        }
+
+        //wczytaj plik z BD
+        private void button6_Click(object sender, EventArgs e)
+        {
+            var connStr = @"Data Source=(local)\sqlexpress;Initial Catalog=OptimaDb;Integrated Security=True;";
+            var plikZTabeli = @"SELECT * from PlikCSV";
+
+            var allData = "";
+
+            using (var polaczenie = new SqlConnection(connStr))
+            {
+                polaczenie.Open();
+                using (var command = new SqlCommand(plikZTabeli))
+                {
+                    command.Connection = polaczenie;
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            allData = reader["zawartosc"].ToString();
+                        }
+                    }
+                }
+            }
+
+            var tabela = new DataTable();
+            var znak = ';';
+
+            var linieTekstu = Regex.Split(allData, "\r\n").ToList();
+            var nazwyKolumn = linieTekstu.First().Split(znak);
+            //var linie = allData.Split().SkipWhile(x => x.Equals("\r\n"));// && x != "\r\n");
+
+            foreach (var s in nazwyKolumn)
+            {
+                tabela.Columns.Add(s);
+            }
+
+            linieTekstu.RemoveAt(0);
+            foreach (var s in linieTekstu)
+            {
+                tabela.Rows.Add(s.Split(znak));
+            }
+
+            dataGridView1.DataSource = tabela;
         }
     }
 }
