@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.Configuration;
 
 namespace csv
 {
@@ -94,8 +95,13 @@ namespace csv
             var plik = openFileDialog1.FileName;
 
             var allData = File.ReadAllText(plik);
-
-            using (var polacznie = new SqlConnection("Data Source=localhost;Initial Catalog=OptimaDb;Integrated Security=True;"))
+            var setting = ConfigurationManager.ConnectionStrings["ConnStringODB1"];
+            
+            using (var polacznie = new SqlConnection(setting.ConnectionString))
+                                                    /*"Persist Security Info = true;" +
+                                                     "Integrated Security = true;" +
+                                                     "Initial Catalog = OptimaDb" +
+                                                     "server = (local)"))*/
             {
                 polacznie.Open();
                 try
@@ -111,9 +117,9 @@ namespace csv
                     }
                     
                 }
-                catch (Exception)
+                catch (Exception exception)
                 {
-                    MessageBox.Show(e.ToString());
+                    MessageBox.Show("error");
                 }
             }
         }
