@@ -114,7 +114,6 @@ namespace csv
                     command.Connection = polaczenie;
                     command.CommandText = stworzTabele;
                     command.CommandType = CommandType.Text;
-                    command.Parameters.AddWithValue(@"zawartosc", allData);
 
                     try
                     {
@@ -133,6 +132,8 @@ namespace csv
                     command.Connection = polaczenie;
                     command.CommandText = plikDoTabeli;
                     command.CommandType = CommandType.Text;
+                    command.Parameters.Add(new SqlParameter(@"zawartosc", allData));
+
 
                     try
                     {
