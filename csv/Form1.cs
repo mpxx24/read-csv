@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Drawing;
@@ -80,6 +81,33 @@ namespace csv
         //sposób 3
         private void button3_Click(object sender, EventArgs e)
         {
+            openFileDialog1.ShowDialog();
+            var plik = openFileDialog1.FileName;
+            var nazwyKolumn = "";
+            var resztaDanych = new List<string>();
+            var znak = ';';
+            var tabela = new DataTable();
+
+            using (var reader = new StreamReader(plik))
+            {
+                nazwyKolumn = reader.ReadLine();
+                while (!reader.EndOfStream)
+                {
+                    resztaDanych.Add(reader.ReadLine());
+                }
+            }
+
+            var kolumny = nazwyKolumn.Split(znak);
+            foreach (var kol in kolumny)
+            {
+                tabela.Columns.Add(kol);
+            }
+
+            foreach (var line in resztaDanych)
+            {
+                tabela.Rows.Add(line.Split(znak));
+            }
+            dataGridView1.DataSource = tabela;
 
         }
 
