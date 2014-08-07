@@ -132,9 +132,9 @@ namespace csv
 
             //string connStr = @"Server=(local)\\sqlexpress;Database=OptimaDb;Trusted_Connection=True";
             var connStr = @"Data Source=(local)\sqlexpress;Initial Catalog=OptimaDb;Integrated Security=True;";
-            var stworzTabele = @"CREATE TABLE PlikCSV (zawartosc varchar(255))";
+            var stworzTabele = @"CREATE TABLE PlikCSV (zawartosc nvarchar(255))";
             //string stworzTabele = @"IF NOT EXIST (SELECT * FROM sys.tables WHERE name = 'PlikCSV')" +
-            //                      "CREATE TABLE PlikCSV (zawartosc varchar(255))";
+            //                      "CREATE TABLE PlikCSV (zawartosc nvarchar(255))";
                                   
             var plikDoTabeli = @"INSERT INTO PlikCSV VALUES (@zawartosc)";
 
