@@ -203,26 +203,11 @@ namespace csv
                     }
                 }
             }
+            
+            var plik = "mojPlikCSV.csv";
 
-            var tabela = new DataTable();
-            var znak = ';';
+            File.WriteAllText(plik, allData);
 
-            var linieTekstu = Regex.Split(allData, "\r\n").ToList();
-            var nazwyKolumn = linieTekstu.First().Split(znak);
-            //var linie = allData.Split().SkipWhile(x => x.Equals("\r\n"));// && x != "\r\n");
-
-            foreach (var s in nazwyKolumn)
-            {
-                tabela.Columns.Add(s);
-            }
-
-            linieTekstu.RemoveAt(0);
-            foreach (var s in linieTekstu)
-            {
-                tabela.Rows.Add(s.Split(znak));
-            }
-
-            dataGridView1.DataSource = tabela;
         }
     }
 }
