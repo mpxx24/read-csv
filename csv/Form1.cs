@@ -22,8 +22,7 @@ namespace csv
         {
             InitializeComponent();
         }
-        //ogranicz kol do 156?
-
+        
         //sposób #1 - line by line
         private void button1_Click(object sender, EventArgs e)
         {
@@ -33,19 +32,27 @@ namespace csv
             var wierszeBezKolumn = wiersze.Skip(1);
             var znak = ';';
             var nazwyKolumn = wiersze.First().Split(znak);
-            var tabela = new DataTable();
-            
-            foreach (var kol in nazwyKolumn)
+            if (nazwyKolumn.Length < 156)
             {
-                tabela.Columns.Add(kol);
-            }
+                var tabela = new DataTable();
 
-            foreach (var dane in wierszeBezKolumn)
+                foreach (var kol in nazwyKolumn)
+                {
+                    tabela.Columns.Add(kol);
+                }
+
+                foreach (var dane in wierszeBezKolumn)
+                {
+                    tabela.Rows.Add(dane.Split(znak));
+                }
+
+                dataGridView1.DataSource = tabela;
+            }
+            else
             {
-                tabela.Rows.Add(dane.Split(znak));
+                MessageBox.Show("plik może mieć maksymalnie 156 kolumn!");
             }
             
-            dataGridView1.DataSource = tabela;
         }
 
         //sposób #2 - jeden string
@@ -61,19 +68,28 @@ namespace csv
             var nazwyKolumn = linieTekstu.First().Split(znak);
             //var linie = allData.Split().SkipWhile(x => x.Equals("\r\n"));// && x != "\r\n");
 
-            foreach (var s in nazwyKolumn)
+            if (nazwyKolumn.Length < 156)
             {
-                tabela.Columns.Add(s);
+                foreach (var s in nazwyKolumn)
+                {
+                    tabela.Columns.Add(s);
+                }
+
+                linieTekstu.RemoveAt(0);
+                foreach (var s in linieTekstu)
+                {
+                    tabela.Rows.Add(s.Split(znak));
+                }
+
+
+                dataGridView1.DataSource = tabela;
+            }
+            else
+            {
+                MessageBox.Show("plik może mieć maksymalnie 156 kolumn!");
             }
 
-            linieTekstu.RemoveAt(0);
-            foreach (var s in linieTekstu)
-            {
-                tabela.Rows.Add(s.Split(znak));
-            }
-
-
-            dataGridView1.DataSource = tabela;
+            
 
 
         }
@@ -98,16 +114,24 @@ namespace csv
             }
 
             var kolumny = nazwyKolumn.Split(znak);
-            foreach (var kol in kolumny)
+            if (kolumny.Length < 156)
             {
-                tabela.Columns.Add(kol);
-            }
+                foreach (var kol in kolumny)
+                {
+                    tabela.Columns.Add(kol);
+                }
 
-            foreach (var line in resztaDanych)
-            {
-                tabela.Rows.Add(line.Split(znak));
+                foreach (var line in resztaDanych)
+                {
+                    tabela.Rows.Add(line.Split(znak));
+                }
+                dataGridView1.DataSource = tabela;
             }
-            dataGridView1.DataSource = tabela;
+            else
+            {
+                MessageBox.Show("plik może mieć maksymalnie 156 kolumn!");
+            }
+            
 
         }
 
