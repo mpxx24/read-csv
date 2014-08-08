@@ -94,7 +94,7 @@ namespace csv
 
         }
 
-        //sposób 3
+        //sposób 3 - streamreader
         private void button3_Click(object sender, EventArgs e)
         {
             openFileDialog1.ShowDialog();
